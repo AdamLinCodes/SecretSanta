@@ -2,6 +2,7 @@ import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;  // Import the IOException class to handle errors
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class SecretSanta {
     public static void main(String [] args) throws IOException {
@@ -38,6 +39,21 @@ public class SecretSanta {
            kocherCircle.add(new String[] { kocherNames.get(i), kocherNames.get((i + 1) % (kocherNames.size())) });
         }
 
+        // re-shuffle lists, if there are duplicates
+        while(hasDuplicates(linCircle, kocherCircle)) {
+            // Shuffle the names using the static Collections class
+            Collections.shuffle(linNames);
+            Collections.shuffle(kocherNames);
+
+            linCircle.clear();
+            kocherCircle.clear();
+
+            for(int i = 0 ; i < linNames.size(); i++) {
+                linCircle.add(new String[] { linNames.get(i), linNames.get((i + 1) % (linNames.size())) });
+                kocherCircle.add(new String[] { kocherNames.get(i), kocherNames.get((i + 1) % (kocherNames.size())) });
+            }
+        }
+
         // Write each pair to a file, where the first name is the name of the file, and the content of the file is the second name
         FileWriter myWriter;
         for(int i = 0; i < linCircle.size(); i++) {
@@ -53,13 +69,25 @@ public class SecretSanta {
             myWriter.close();
         }
 
-        // For output and debugging
-//        for(int i = 0; i < kocherCircle.size(); i++) {
-//            System.out.println(kocherCircle.get(i)[0] + " has " + kocherCircle.get(i)[1]);
-//        }
-//        System.out.println("--------------------------");
-//        for(int i = 0; i < linCircle.size(); i++) {
-//            System.out.println(linCircle.get(i)[0] + " has " + linCircle.get(i)[1]);
-//        }
+//         For output and debugging
+        for(int i = 0; i < kocherCircle.size(); i++) {
+            System.out.println(kocherCircle.get(i)[0] + " has " + kocherCircle.get(i)[1]);
+        }
+        System.out.println("--------------------------");
+        for(int i = 0; i < linCircle.size(); i++) {
+            System.out.println(linCircle.get(i)[0] + " has " + linCircle.get(i)[1]);
+        }
+        System.out.println(hasDuplicates(linCircle, kocherCircle));
+    }
+
+    public static boolean hasDuplicates(List<String[]> list1, List<String[]> list2) {
+        for(int i = 0; i < list1.size(); i++) {
+            for(int j = 0; j < list2.size(); j++) {
+                if(list1.get(i)[0].equals(list2.get(j)[0]) && list1.get(i)[1].equals(list2.get(j)[1])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
